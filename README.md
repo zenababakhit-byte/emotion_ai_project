@@ -125,3 +125,24 @@ Proje başarılı kabul edilebilmesi için:
 - Matplotlib
 - Scikit-learn
 - Git
+
+## 11. Proje Durumu
+
+Proje aktif olarak geliştirilmektedir.
+
+## 12. Proje Yapısı
+
+emotion_ai_project/
+│
+├── data/
+├── models/
+├── notebooks/
+├── reports/
+│   ├── daily/
+│   └── final/
+├── screenshots/
+├── src/
+├── tests/
+├── requirements.txt
+├── README.md
+└── .gitignore
