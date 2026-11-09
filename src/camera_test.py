@@ -1,5 +1,6 @@
 import cv2
 import time
+from collections import deque          # <-- NOUVEAU
 
 
 # Kamerayi baslat
@@ -13,10 +14,11 @@ print("=" * 50)
 print("GERCEK ZAMANLI YUZ IFADELERI VE DUYGU ANALIZI")
 print("=" * 50)
 print("Kamera basariyla acildi.")
+print("Kamera FPS (bildirilen):", camera.get(cv2.CAP_PROP_FPS))   # <-- NOUVEAU
 print("Programdan cikmak icin Q tusuna basin.")
 
-
 previous_time = time.time()
+fps_history = deque(maxlen=30)         # <-- NOUVEAU
 
 while True:
 
@@ -27,17 +29,14 @@ while True:
         print("HATA: Kameradan goruntu alinamadi!")
         break
 
-    # FPS hesaplama
+    # FPS hesaplama (son 30 karenin ortalamasi)
     current_time = time.time()
-
     elapsed_time = current_time - previous_time
+    previous_time = current_time
 
     if elapsed_time > 0:
-        fps = 1 / elapsed_time
-    else:
-        fps = 0
-
-    previous_time = current_time
+        fps_history.append(1 / elapsed_time)       # <-- NOUVEAU
+    fps = sum(fps_history) / len(fps_history) if fps_history else 0   # <-- NOUVEAU
 
     # FPS bilgisini ekrana yaz
     cv2.putText(
@@ -62,10 +61,7 @@ while True:
     )
 
     # Goruntuyu goster
-    cv2.imshow(
-        "Gercek Zamanli Duygu Analizi",
-        frame
-    )
+    cv2.imshow("Gercek Zamanli Duygu Analizi", frame)
 
     # Q tusuna basilirsa cik
     if cv2.waitKey(1) & 0xFF == ord("q"):
@@ -74,7 +70,6 @@ while True:
 
 # Kaynaklari serbest birak
 camera.release()
-
 cv2.destroyAllWindows()
 
 print("Kamera kapatildi.")
