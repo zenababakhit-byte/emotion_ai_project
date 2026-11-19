@@ -25,6 +25,7 @@ Thumbs.db
 # Dataset files
 data/raw/
 data/processed/
+data/fer2013/
 
 # Temporary files
 *.log
