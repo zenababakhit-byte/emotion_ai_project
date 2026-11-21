@@ -1,60 +1,39 @@
 7. Gün – FER2013 Veri Setinin İndirilmesi ve Keşifsel Veri Analizi
 
-Amaç: Bugün, model eğitiminde kullanacağım FER2013 veri setini projeye eklemeyi, yapısını tanımayı ve sınıf dağılımına bakarak olası sorunları önceden görmeyi hedefledim.
+Amaç
+FER2013 veri setini projeye ekleyip klasör yapısını doğrulamak, sınıf dağılımını incelemek ve olası veri dengesizliği ile etiket sorunlarını önceden tespit etmek.
 
-Yapılan Çalışmalar: FER2013 veri setini Kaggle’dan indirip data/fer2013/ klasörüne çıkardım. Veri seti train ve test klasörlerinden oluşuyor ve her birinin içinde yedi duygu sınıfı için ayrı bir alt klasör var. Veri seti çok sayıda dosya içerdiği için Git’in bunları takip etmesini istemedim ve .gitignore dosyasına data/fer2013/ satırını ekledim.
+Yapılan Çalışmalar
+- FER2013 veri setini indirip data/fer2013/ (train ve test) klasörüne çıkardım ve .gitignore dosyasına data/fer2013/ satırını ekledim.
+- src/data_explore.py dosyasını yazarak Pandas ile sınıf sayılarını çıkardım, Matplotlib ile dağılım grafiği ve her sınıftan 8 rastgele örnek yüz ızgarası ürettim.
+- Çıktıları reports/sinif_dagilimi.csv, reports/sinif_dagilimi.png ve reports/ornek_yuzler.png olarak kaydettim.
 
-Ardından src/data_explore.py dosyasını yazdım. Bu dosya Pandas ile her sınıftaki görüntü sayısını tabloya döküyor, Matplotlib ile sınıf dağılımı grafiğini çiziyor ve her sınıftan rastgele 8 görüntüyü bir ızgarada gösteriyor. Çıktıları reports/sinif_dagilimi.csv, reports/sinif_dagilimi.png ve reports/ornek_yuzler.png olarak kaydettim.
+Kullanılan Teknolojiler
+- Python, Pandas, Matplotlib, Pillow, Git, Visual Studio Code
 
-Kullanılan Teknolojiler: Python, Pandas, Matplotlib, Pillow, Git, Visual Studio Code
+Elde Edilen Sonuç
+Toplam 35.887 adet 48x48 gri tonlamalı görüntü (28.709 eğitim, 7.178 test) doğrulandı:
 
-Elde Edilen Sonuç: Veri setinde 28.709 eğitim ve 7.178 test olmak üzere toplam 35.887 görüntü var. Sınıflara göre dağılım şöyle:
+┌──────────┬────────┬───────┬─────────────────┐
+│ Sınıf    │ Eğitim │ Test  │ Eğitimdeki Oran │
+├──────────┼────────┼───────┼─────────────────┤
+│ Happy    │ 7.215  │ 1.774 │ %25.1           │
+│ Neutral  │ 4.965  │ 1.233 │ %17.3           │
+│ Sad      │ 4.830  │ 1.247 │ %16.8           │
+│ Fear     │ 4.097  │ 1.024 │ %14.3           │
+│ Angry    │ 3.995  │ 958   │ %13.9           │
+│ Surprise │ 3.171  │ 831   │ %11.0           │
+│ Disgust  │ 436    │ 111   │ %1.5            │
+└──────────┴────────┴───────┴─────────────────┘
 
-| Sınıf | Eğitim | Test | Eğitimdeki oran |
-|---|---|---|---|
-| Happy | 7.215 | 1.774 | %25,1 |
-| Neutral | 4.965 | 1.233 | %17,3 |
-| Sad | 4.830 | 1.247 | %16,8 |
-| Fear | 4.097 | 1.024 | %14,3 |
-| Angry | 3.995 | 958 | %13,9 |
-| Surprise | 3.171 | 831 | %11,0 |
-| Disgust | 436 | 111 | %1,5 |
+Happy sınıfı Disgust sınıfından yaklaşık 16 kat fazla örnek içeriyor; bu dengesizliği 8. günde sınıf ağırlıklarıyla ele alacağım.
 
-Görüntülerin hepsi 48x48 piksel boyutunda ve gri tonlamalı. Dağılım dengeli değil: Happy sınıfında Disgust sınıfından yaklaşık 16 kat fazla örnek var. Bu yüzden modelin Disgust sınıfını öğrenmekte zorlanmasını bekliyorum. 8. günde sınıf ağırlıklarını kullanarak bu sorunu azaltmaya çalışacağım. Disgust için test setinde yalnızca 111 görüntü olduğundan, bu sınıfın test sonuçlarına da biraz temkinli yaklaşmam gerekecek.
+Karşılaşılan Sorunlar ve Çözüm
+- git status çıktısında data/fer2013/ takip dışı göründü; .gitignore dosyasına data/fer2013/ eklenerek yaklaşık 36.000 görüntü Git dışında bırakıldı.
+- Örnek görsellerde filigranlı, kısmen kapalı veya gürültülü etiketli görüntüler fark edildi ve sınırlılık olarak not edildi.
 
-Karşılaşılan Sorunlar ve Çözüm: git status çıktısında data/ klasörünün takip edilmeyen dosyalar arasında göründüğünü fark ettim. .gitignore dosyasında yalnızca data/raw/ ve data/processed/ yazıyordu. data/fer2013/ satırını ekleyince yaklaşık 36.000 görüntü Git’in dışında kaldı.
+Ekran Görüntüsü
+- screenshots/Gun_07_Ekran_01.png ve screenshots/Gun_07_Ekran_02.png: Sınıf dağılımı grafiği, sayı tablosu ve 7 sınıftan örnek yüz ızgarası.
 
-Örnek görüntülere bakarken FER2013'ün etiketlerinde gürültü olduğunu da gördüm. Bazı görüntülerde filigran var, bazıları heykel ya da çizgi film karakteri, bazılarında yüz el veya telefonla kısmen kapalı ve bazı etiketler (özellikle Fear) tartışmaya açık. Bu yüzden modelin başarısının sınırlı kalabileceğini şimdiden hesaba katıyorum.
-
-Ekran Görüntüsü: Görüntülerde sınıf dağılımı grafiği, terminaldeki sayı tablosu ve her sınıftan örnek yüzlerin bulunduğu ızgara yer alıyor.
-
-Ertesi Gün Planı: Yarın veriyi PyTorch ile eğitime hazır hale getireceğim. Dönüşümleri tanımlayacağım, eğitim verisini eğitim ve doğrulama olarak ayıracağım, veri artırma ekleyeceğim, sınıf ağırlıklarını hesaplayacağım ve DataLoader yapısını kuracağım.7. Gün – FER2013 Veri Setinin İndirilmesi ve Keşifsel Veri Analizi
-
-Amaç: Bugün, model eğitiminde kullanacağım FER2013 veri setini projeye eklemeyi, yapısını tanımayı ve sınıf dağılımına bakarak olası sorunları önceden görmeyi hedefledim.
-
-Yapılan Çalışmalar: FER2013 veri setini Kaggle’dan indirip data/fer2013/ klasörüne çıkardım. Veri seti train ve test klasörlerinden oluşuyor ve her birinin içinde yedi duygu sınıfı için ayrı bir alt klasör var. Veri seti çok sayıda dosya içerdiği için Git’in bunları takip etmesini istemedim ve .gitignore dosyasına data/fer2013/ satırını ekledim.
-
-Ardından src/data_explore.py dosyasını yazdım. Bu dosya Pandas ile her sınıftaki görüntü sayısını tabloya döküyor, Matplotlib ile sınıf dağılımı grafiğini çiziyor ve her sınıftan rastgele 8 görüntüyü bir ızgarada gösteriyor. Çıktıları reports/sinif_dagilimi.csv, reports/sinif_dagilimi.png ve reports/ornek_yuzler.png olarak kaydettim.
-
-Kullanılan Teknolojiler: Python, Pandas, Matplotlib, Pillow, Git, Visual Studio Code
-
-Elde Edilen Sonuç: Veri setinde 28.709 eğitim ve 7.178 test olmak üzere toplam 35.887 görüntü var. Sınıflara göre dağılım şöyle:
-
-Sınıf	Eğitim	Test	Eğitimdeki oran
-Happy	7.215	1.774	%25,1
-Neutral	4.965	1.233	%17,3
-Sad	4.830	1.247	%16,8
-Fear	4.097	1.024	%14,3
-Angry	3.995	958	%13,9
-Surprise	3.171	831	%11,0
-Disgust	436	111	%1,5
-
-Görüntülerin hepsi 48x48 piksel boyutunda ve gri tonlamalı. Dağılım dengeli değil: Happy sınıfında Disgust sınıfından yaklaşık 16 kat fazla örnek var. Bu yüzden modelin Disgust sınıfını öğrenmekte zorlanmasını bekliyorum. 8. günde sınıf ağırlıklarını kullanarak bu sorunu azaltmaya çalışacağım. Disgust için test setinde yalnızca 111 görüntü olduğundan, bu sınıfın test sonuçlarına da biraz temkinli yaklaşmam gerekecek.
-
-Karşılaşılan Sorunlar ve Çözüm: git status çıktısında data/ klasörünün takip edilmeyen dosyalar arasında göründüğünü fark ettim. .gitignore dosyasında yalnızca data/raw/ ve data/processed/ yazıyordu. data/fer2013/ satırını ekleyince yaklaşık 36.000 görüntü Git’in dışında kaldı.
-
-Örnek görüntülere bakarken FER2013'ün etiketlerinde gürültü olduğunu da gördüm. Bazı görüntülerde filigran var, bazıları heykel ya da çizgi film karakteri, bazılarında yüz el veya telefonla kısmen kapalı ve bazı etiketler (özellikle Fear) tartışmaya açık. Bu yüzden modelin başarısının sınırlı kalabileceğini şimdiden hesaba katıyorum.
-
-Ekran Görüntüsü: Görüntülerde sınıf dağılımı grafiği, terminaldeki sayı tablosu ve her sınıftan örnek yüzlerin bulunduğu ızgara yer alıyor.
-
-Ertesi Gün Planı: Yarın veriyi PyTorch ile eğitime hazır hale getireceğim. Dönüşümleri tanımlayacağım, eğitim verisini eğitim ve doğrulama olarak ayıracağım, veri artırma ekleyeceğim, sınıf ağırlıklarını hesaplayacağım ve DataLoader yapısını kuracağım.
+Ertesi Gün Planı
+8. günde veriyi PyTorch için hazırlayacağım: dönüşümler, %80/%20 eğitim/doğrulama bölmesi, veri artırma, sınıf ağırlıkları ve DataLoader kurulacaktır.

@@ -1,5 +1,4 @@
 15. Gün – Final Raporu, Demo ve Proje Teslimi
-
 Amaç
 15 günlük çalışmayı özetleyen final raporunu tamamlamak, son test ve demo provasını kontrol edip projeyi v1.0 etiketiyle GitHub üzerinden teslim etmek.
 
